@@ -48,17 +48,17 @@
       </feature>
     </config-file>
         
-    <header-file src="src/ios/SMTPClient.h" target-dir="SMTPClientPlugin"/>
-    <source-file src="src/ios/SMTPClient.m" target-dir="SMTPClientPlugin"/>
-    <header-file src="src/ios/SMTPLibrary/Base64Transcoder.h" target-dir="SMTPClientPlugin"/>
-    <source-file src="src/ios/SMTPLibrary/Base64Transcoder.m" target-dir="SMTPClientPlugin"/>
-    <header-file src="src/ios/SMTPLibrary/HSK_CFUtilities.h" target-dir="SMTPClientPlugin"/>
-    <source-file src="src/ios/SMTPLibrary/HSK_CFUtilities.m" target-dir="SMTPClientPlugin"/>
-    <header-file src="src/ios/SMTPLibrary/NSData+Base64Additions.h" target-dir="SMTPClientPlugin"/>
-    <source-file src="src/ios/SMTPLibrary/NSData+Base64Additions.m" target-dir="SMTPClientPlugin"/>
-    <header-file src="src/ios/SMTPLibrary/NSStream+SKPSMTPExtensions.h" target-dir="SMTPClientPlugin"/>
-    <source-file src="src/ios/SMTPLibrary/NSStream+SKPSMTPExtensions.m" target-dir="SMTPClientPlugin"/>
-    <header-file src="src/ios/SMTPLibrary/SKPSMTPMessage.h" target-dir="SMTPClientPlugin"/>
-    <source-file src="src/ios/SMTPLibrary/SKPSMTPMessage.m" target-dir="SMTPClientPlugin"/>
+    <header-file src="src/ios/SMTPClient.h"/>
+    <source-file src="src/ios/SMTPClient.m"/>
+    <header-file src="src/ios/SMTPLibrary/Base64Transcoder.h"/>
+    <source-file src="src/ios/SMTPLibrary/Base64Transcoder.m"/>
+    <header-file src="src/ios/SMTPLibrary/HSK_CFUtilities.h"/>
+    <source-file src="src/ios/SMTPLibrary/HSK_CFUtilities.m"/>
+    <header-file src="src/ios/SMTPLibrary/NSData+Base64Additions.h"/>
+    <source-file src="src/ios/SMTPLibrary/NSData+Base64Additions.m"/>
+    <header-file src="src/ios/SMTPLibrary/NSStream+SKPSMTPExtensions.h"/>
+    <source-file src="src/ios/SMTPLibrary/NSStream+SKPSMTPExtensions.m"/>
+    <header-file src="src/ios/SMTPLibrary/SKPSMTPMessage.h"/>
+    <source-file src="src/ios/SMTPLibrary/SKPSMTPMessage.m"/>
   </platform>
 </plugin>
