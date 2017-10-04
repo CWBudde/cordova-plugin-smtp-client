@@ -1,0 +1,40 @@
+{
+  "name": "cordova-plugin-smtp-client",
+  "version": "2.0.5",
+  "description": "Basic SMTP client for editing and sending email messages",
+  "cordova": {
+		"id": "cordova-plugin-smtp-client",
+	  "platforms":[
+			"android",
+			"ios"
+		]
+	},
+	"repository": {
+    "type": "git",
+    "url": "https://github.com/CWBudde/cordova-plugin-smtp-client.git"
+  },
+  "keywords": [
+    "cordova",
+    "smtp",
+    "email",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "Christian-W.Budde <CWBudde@pcjv.de> and others (see README.MD)",
+  "license": "Apache-2.0",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=6.0.0"
+    },
+    {
+      "name": "cordova-android",
+      "version": ">=6.2.0"
+    },
+    {
+      "name": "cordova-ios",
+      "version": ">=4.0.0"
+    }
+  ]
+}
