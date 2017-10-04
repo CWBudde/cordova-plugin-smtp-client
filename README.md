@@ -23,7 +23,7 @@ On your javascript call use a code similar to this.
 	    smtpPassword: "password",
 	    attachments: ["attchament1","attchament2"],
 	    subject: "email subject",
-		textBody: "write something within the boddy of the email"
+	    textBody: "write something within the boddy of the email"
 	};
 	            
 	var success = function(message) {
@@ -41,11 +41,13 @@ The attachments is an array of strings where when using IOS the files needs to b
 The return object "message" has the following structure
 
 	{
-	  success: bool,
+		success: bool,
 		errorCode: int,
 		errorMessage: string	    
 	}
 
 ## Copyright
 
-The library was originally written by albernazf (https://github.com/albernazf/cordova-smtp-client) and later modified by Nelson Medina Humberto (https://github.com/nelsonhumberto/cordova-smtp-client/). On iOS it makes use of the skpsmtpmessage library, which was originally written by Ian Baird. A recent fork can be found here: https://github.com/jetseven/skpsmtpmessage  
+The library was originally written by albernazf (https://github.com/albernazf/cordova-smtp-client) and later modified by Nelson Medina Humberto (https://github.com/nelsonhumberto/cordova-smtp-client/).
+
+On iOS it makes use of the skpsmtpmessage library, which was originally written by Ian Baird. A recent fork can be found here: https://github.com/jetseven/skpsmtpmessage  
