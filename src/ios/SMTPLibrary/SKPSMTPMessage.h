@@ -29,7 +29,7 @@
 
 #import <CFNetwork/CFNetwork.h>
 
-enum 
+typedef enum
 {
     kSKPSMTPIdle = 0,
     kSKPSMTPConnecting,
@@ -44,14 +44,13 @@ enum
     kSKPSMTPWaitingSendSuccess,
     kSKPSMTPWaitingQuitReply,
     kSKPSMTPMessageSent
-};
-typedef NSUInteger SKPSMTPState;
-    
+} SKPSMTPState;
+
 // Message part keys
-extern NSString *kSKPSMTPPartContentDispositionKey;
-extern NSString *kSKPSMTPPartContentTypeKey;
-extern NSString *kSKPSMTPPartMessageKey;
-extern NSString *kSKPSMTPPartContentTransferEncodingKey;
+extern NSString *const kSKPSMTPPartContentDispositionKey;
+extern NSString *const kSKPSMTPPartContentTypeKey;
+extern NSString *const kSKPSMTPPartMessageKey;
+extern NSString *const kSKPSMTPPartContentTransferEncodingKey;
 
 // Error message codes
 #define kSKPSMPTErrorConnectionTimeout -5
@@ -66,6 +65,8 @@ extern NSString *kSKPSMTPPartContentTransferEncodingKey;
 
 @class SKPSMTPMessage;
 
+typedef void (^SKPSMTPMessageCompletionHandler)(SKPSMTPMessage *message, NSError *error);
+
 @protocol SKPSMTPMessageDelegate
 @required
 
@@ -74,53 +75,11 @@ extern NSString *kSKPSMTPPartContentTransferEncodingKey;
 
 @end
 
-@interface SKPSMTPMessage : NSObject <NSCopying, NSStreamDelegate>
-{
-    NSString *login;
-    NSString *pass;
-    NSString *relayHost;
-    NSArray *relayPorts;
-    
-    NSString *subject;
-    NSString *fromEmail;
-    NSString *toEmail;
-	NSString *ccEmail;
-	NSString *bccEmail;
-    NSArray *parts;
-    
-    NSOutputStream *outputStream;
-    NSInputStream *inputStream;
-    
-    BOOL requiresAuth;
-    BOOL wantsSecure;
-    BOOL validateSSLChain;
-    
-    SKPSMTPState sendState;
-    BOOL isSecure;
-    NSMutableString *inputString;
-    
-    // Auth support flags
-    BOOL serverAuthCRAMMD5;
-    BOOL serverAuthPLAIN;
-    BOOL serverAuthLOGIN;
-    BOOL serverAuthDIGESTMD5;
-    
-    // Content support flags
-    BOOL server8bitMessages;
-    
-    //id <SKPSMTPMessageDelegate> delegate;
-    
-    NSTimeInterval connectTimeout;
-    
-    NSTimer *connectTimer;
-    NSTimer *watchdogTimer;
-}
-
+@interface SKPSMTPMessage : NSObject <NSCopying>
 
 @property(nonatomic, retain) NSString *login;
 @property(nonatomic, retain) NSString *pass;
 @property(nonatomic, retain) NSString *relayHost;
-
 @property(nonatomic, retain) NSArray *relayPorts;
 @property(nonatomic, assign) BOOL requiresAuth;
 @property(nonatomic, assign) BOOL wantsSecure;
@@ -138,5 +97,6 @@ extern NSString *kSKPSMTPPartContentTransferEncodingKey;
 @property(nonatomic, assign) id <SKPSMTPMessageDelegate> delegate;
 
 - (BOOL)send;
+- (BOOL)sendWithCompletionHandler:(SKPSMTPMessageCompletionHandler)handler;
 
 @end

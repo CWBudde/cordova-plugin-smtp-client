@@ -26,11 +26,16 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#include <UIKit/UIKit.h>
+#ifndef _BASE64TRANSCODER_H_
+#define _BASE64TRANSCODER_H_
+
+#include <stdlib.h>
+#include <stdbool.h>
 
 extern size_t EstimateBas64EncodedDataSize(size_t inDataSize);
 extern size_t EstimateBas64DecodedDataSize(size_t inDataSize);
 
-extern bool Base64EncodeData(const void *inInputData, size_t inInputDataSize, char *outOutputData, size_t *ioOutputDataSize, BOOL wrapped);
+extern bool Base64EncodeData(const void *inInputData, size_t inInputDataSize, char *outOutputData, size_t *ioOutputDataSize, bool wrapped);
 extern bool Base64DecodeData(const void *inInputData, size_t inInputDataSize, void *ioOutputData, size_t *ioOutputDataSize);
 
+#endif	// #ifndef _BASE64TRANSCODER_H_

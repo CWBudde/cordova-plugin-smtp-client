@@ -33,7 +33,7 @@
 
 @implementation NSData (Base64Additions)
 
-+(id)decodeBase64ForString:(NSString *)decodeString
++(NSData *)decodeBase64ForString:(NSString *)decodeString
 {
     NSData *decodeBuffer = nil;
     // Must be 7-bit clean!
@@ -56,7 +56,7 @@
     return decodeBuffer;
 }
 
-+(id)decodeWebSafeBase64ForString:(NSString *)decodeString
++(NSData *)decodeWebSafeBase64ForString:(NSString *)decodeString
 {
     return [NSData decodeBase64ForString:[[decodeString stringByReplacingOccurrencesOfString:@"-" withString:@"+"] stringByReplacingOccurrencesOfString:@"_" withString:@"/"]];
 }
