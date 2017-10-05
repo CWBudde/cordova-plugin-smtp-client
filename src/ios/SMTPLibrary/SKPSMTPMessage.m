@@ -792,17 +792,17 @@ NSString *const kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTr
     NSMutableString *message = [[NSMutableString alloc] init];
     static NSString *separatorString = @"--SKPSMTPMessage--Separator--Delimiter\r\n";
     
-	CFUUIDRef	uuidRef   = CFUUIDCreate(kCFAllocatorDefault);
-	NSString	*uuid     = (NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
-	CFRelease(uuidRef);
+    CFUUIDRef	uuidRef   = CFUUIDCreate(kCFAllocatorDefault);
+    NSString	*uuid     = (NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
+    CFRelease(uuidRef);
     
     NSDate *now = [[NSDate alloc] init];
-	NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] init];
+    NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] init];
 	
-	[dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss Z"];
+    [dateFormatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss Z"];
 	
-	[message appendFormat:@"Date: %@\r\n", [dateFormatter stringFromDate:now]];
-	[message appendFormat:@"Message-id: <%@@%@>\r\n", [(NSString *)uuid stringByReplacingOccurrencesOfString:@"-" withString:@""], self.relayHost];
+    [message appendFormat:@"Date: %@\r\n", [dateFormatter stringFromDate:now]];
+    [message appendFormat:@"Message-id: <%@@%@>\r\n", [(NSString *)uuid stringByReplacingOccurrencesOfString:@"-" withString:@""], self.relayHost];
 	
     [now release];
     [dateFormatter release];
@@ -811,16 +811,14 @@ NSString *const kSKPSMTPPartContentTransferEncodingKey = @"kSKPSMTPPartContentTr
     [message appendFormat:@"From:%@\r\n", _fromEmail];
 	
     
-	if ((self.toEmail != nil) && (![self.toEmail isEqualToString:@""])) 
-    {
-		[message appendFormat:@"To:%@\r\n", self.toEmail];		
-	}
+    if ((self.toEmail != nil) && (![self.toEmail isEqualToString:@""])) {
+        [message appendFormat:@"To:%@\r\n", self.toEmail];		
+    }
 
-	if ((self.ccEmail != nil) && (![self.ccEmail isEqualToString:@""])) 
-    {
-		[message appendFormat:@"Cc:%@\r\n", self.ccEmail];		
-	}
-    
+    if ((self.ccEmail != nil) && (![self.ccEmail isEqualToString:@""])) {
+        [message appendFormat:@"Cc:%@\r\n", self.ccEmail];		
+    }
+
     [message appendString:@"Content-Type: multipart/mixed; boundary=SKPSMTPMessage--Separator--Delimiter\r\n"];
     [message appendString:@"Mime-Version: 1.0 (SKPSMTPMessage 1.0)\r\n"];
     [message appendFormat:@"Subject:%@\r\n\r\n",_subject];
