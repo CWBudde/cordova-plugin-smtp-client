@@ -62,7 +62,7 @@
 		
 	NSMutableArray *partsToSend = [NSMutableArray arrayWithObjects:plainPart, nil];
 		
-	NSArray *files = [json objectForKey:@"attachmentsInBase64Format"];
+	NSArray *files = [json objectForKey:@"attachments"];
 
 	NSError *error = nil;
 	
