@@ -23,7 +23,7 @@ On your javascript call use a code similar to this.
 	    smtpPassword: "password",
 	    attachments: ["attchament1","attchament2"],
 	    subject: "email subject",
-	    textBody: "write something within the boddy of the email"
+	    textBody: "write something within the body of the email"
 	};
 	            
 	var success = function(message) {
