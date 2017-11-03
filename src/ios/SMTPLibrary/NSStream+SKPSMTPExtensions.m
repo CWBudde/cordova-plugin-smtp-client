@@ -35,16 +35,19 @@
 
 @implementation NSStream (SKPSMTPExtensions)
 
-+ (void)getStreamsToHostNamed:(NSString *)hostName port:(SInt32)port inputStream:(NSInputStream **)inputStream outputStream:(NSOutputStream **)outputStream
++ (void)getStreamsToHostNamed:(NSString *)hostName port:(NSInteger)port inputStream:(NSInputStream **)inputStream outputStream:(NSOutputStream **)outputStream
 {
-    CFHostRef host;
-    CFReadStreamRef   readStream = NULL;
-    CFWriteStreamRef writeStream = NULL;
-
-    host = CFHostCreateWithName(NULL, (CFStringRef)hostName);
+    CFHostRef           host;
+    CFReadStreamRef     readStream;
+    CFWriteStreamRef    writeStream;
+    
+    readStream = NULL;
+    writeStream = NULL;
+    
+    host = CFHostCreateWithName(NULL, (__bridge CFStringRef) hostName);
     if (host != NULL) 
     {
-        CFStreamCreatePairWithSocketToCFHost(NULL, host, port, &readStream, &writeStream);
+        (void) CFStreamCreatePairWithSocketToCFHost(NULL, host, port, &readStream, &writeStream);
         CFRelease(host);
     }
     
@@ -57,7 +60,7 @@
     } 
     else 
     {
-        *inputStream = [(NSInputStream *)readStream autorelease];
+        *inputStream = (__bridge NSInputStream *) readStream;
     }
     if (outputStream == NULL) 
     {
@@ -68,7 +71,7 @@
     } 
     else 
     {
-        *outputStream = [(NSOutputStream *)writeStream autorelease];
+        *outputStream = (__bridge NSOutputStream *) writeStream;
     }
 }
 

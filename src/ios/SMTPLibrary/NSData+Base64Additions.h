@@ -33,8 +33,8 @@
 
 @interface NSData (Base64Additions)
 
-+(NSData *)decodeBase64ForString:(NSString *)decodeString;
-+(NSData *)decodeWebSafeBase64ForString:(NSString *)decodeString;
++(id)decodeBase64ForString:(NSString *)decodeString;
++(id)decodeWebSafeBase64ForString:(NSString *)decodeString;
 
 -(NSString *)encodeBase64ForData;
 -(NSString *)encodeWebSafeBase64ForData;
