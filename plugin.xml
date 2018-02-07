@@ -51,7 +51,7 @@
     <header-file src="src/ios/SMTPClient.h"/>
     <source-file src="src/ios/SMTPClient.m"/>
     <header-file src="src/ios/SMTPLibrary/Base64Transcoder.h"/>
-    <source-file src="src/ios/SMTPLibrary/Base64Transcoder.c"/>
+    <source-file src="src/ios/SMTPLibrary/Base64Transcoder.m"/>
     <header-file src="src/ios/SMTPLibrary/HSK_CFUtilities.h"/>
     <source-file src="src/ios/SMTPLibrary/HSK_CFUtilities.m"/>
     <header-file src="src/ios/SMTPLibrary/NSData+Base64Additions.h"/>
