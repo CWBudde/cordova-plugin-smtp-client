@@ -19,6 +19,7 @@
 
 	NSString *from = [json objectForKey:@"emailFrom"];
 	NSString *to = [json objectForKey:@"emailTo"];
+	NSString *cc = [json objectForKey:@"emailCC"];
 	NSString *bcc = [json objectForKey:@"bcc"];
 	NSString *smtpServer = [json objectForKey:@"smtp"];
 	NSString *smtpUser = [json objectForKey:@"smtpUserName"];
@@ -29,6 +30,7 @@
 		
 	message.fromEmail = from;
 	message.toEmail = to;
+	message.ccEmail = cc;
 	if (bcc == (id)[NSNull null] || bcc.length == 0 ){
 		message.bccEmail = nil;
 	} else {
@@ -54,7 +56,7 @@
 	message.delegate = self;
 		
 	NSDictionary *plainPart = [
-  	NSDictionary dictionaryWithObjectsAndKeys:@"text/plain; charset=UTF-8",
+  	NSDictionary dictionaryWithObjectsAndKeys:@"text/html; charset=UTF-8",
     kSKPSMTPPartContentTypeKey,
 		textBody, kSKPSMTPPartMessageKey, @"8bit", 
     kSKPSMTPPartContentTransferEncodingKey, nil

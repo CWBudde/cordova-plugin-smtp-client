@@ -23,6 +23,7 @@ public class Mail extends javax.mail.Authenticator {
     private String _pass;
 
     private String[] _to;
+    private String[] _cc;
     private String _from;
 
     private String _port;
@@ -90,6 +91,14 @@ public class Mail extends javax.mail.Authenticator {
             }
             msg.setRecipients(MimeMessage.RecipientType.TO, addressTo);
 
+			if((_cc != null)){
+				InternetAddress[] addressCC = new InternetAddress[_cc.length]; 
+				for (int i = 0; i < _cc.length; i++) { 
+					addressCC[i] = new InternetAddress(_cc[i]); 
+				}
+				msg.setRecipients(MimeMessage.RecipientType.CC, addressCC);
+			}
+			
             msg.setSubject(_subject);
             msg.setSentDate(new Date());
 
@@ -99,7 +108,8 @@ public class Mail extends javax.mail.Authenticator {
             _multipart.addBodyPart(messageBodyPart);
 
             // Put parts in message
-            msg.setContent(_multipart);
+            // msg.setContent(_multipart);
+			msg.setContent(_body,"text/html; charset=utf-8"); 
 
             // send email
             Transport.send(msg);
@@ -126,6 +136,14 @@ public class Mail extends javax.mail.Authenticator {
     public void set_to(String[] _to) {
         this._to = _to;
     }
+
+	public String[] get_cc() {
+		return _cc;
+	}
+
+	public void set_cc(String[] _cc) {
+		this._cc = _cc;
+	}
 
     public void set_ssl(boolean _ssl) {
         this._ssl = _ssl;
