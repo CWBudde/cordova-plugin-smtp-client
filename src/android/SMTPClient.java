@@ -44,7 +44,7 @@ public class SMTPClient extends CordovaPlugin {
         m.set_body(json.getString("textBody"));
         m.set_subject(json.getString("subject"));
 
-        JSONArray attachments = json.getJSONArray("attachmentsInBase64Format");
+        JSONArray attachments = json.getJSONArray("attachments");
         if(attachments != null){
             for(int i=0; i < attachments.length(); i++){
                 String fileFullName = attachments.getString(i);
