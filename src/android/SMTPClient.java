@@ -83,7 +83,7 @@ public class SMTPClient extends CordovaPlugin {
 
         Mail m = new Mail(json.getString("smtpUserName"), json.getString("smtpPassword"));
         String[] toArr = json.getString("emailTo").split(",");
-        String emailCC = json.getString("emailCC");
+        String emailCC = json.optString("emailCC");
         String[] ccArr = (emailCC.isEmpty()) ? null : emailCC.split(",");
         m.set_to(toArr);
         m.set_cc(ccArr);
