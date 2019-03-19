@@ -2,7 +2,7 @@
 
 ### What should the format of the Base64 string be?
 
-Look at the following code below:
+Look at the following code below for file `APPEmailComposerImpl.m`:
 
 ```ObjectiveC
 /**
