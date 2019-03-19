@@ -2,7 +2,7 @@
 
 Basic SMTP client cordova plugin for editing and sending email messages.
 
-## Using
+## Installation
 
 Install iOS and/or Android platform
 
@@ -13,7 +13,9 @@ Install the plugin using any plugman compatible cli
 
     $ cordova plugin add https://github.com/CWBudde/cordova-plugin-smtp-client.git
 
-On your javascript call use a code similar to this.
+## Usage
+
+On Javascript, use code that is similar to the following.
 
 	var mailSettings = {
 	    emailFrom: "emailFrom@domain.com",
@@ -21,7 +23,7 @@ On your javascript call use a code similar to this.
 	    smtp: "smtp-mail.domain.com",
 	    smtpUserName: "authuser@domain.com",
 	    smtpPassword: "password",
-	    attachments: ["attchament1","attchament2"],
+	    attachments: ["attachment1", "attachment2"],
 	    subject: "email subject",
 	    textBody: "write something within the body of the email"
 	};
@@ -36,18 +38,26 @@ On your javascript call use a code similar to this.
 				
 	smtpClient.sendMail(mailSettings, success, failure);
 
-The attachments is an array of strings where when using IOS the files needs to be in [DATA_URI format](doc/attachments.md) and when Android should be the path of the file.
+### Attachments
+
+The attachments is an array of strings.
+
+On the iOS platform, it must use a [DATA_URI format](doc/attachments.md).
+
+On the Android platform, it must be the path to the file.
+
+### Return type
 	
 The return object "message" has the following structure
 
 	{
-		success: bool,
-		errorCode: int,
+		success: boolean,
+		errorCode: number,
 		errorMessage: string	    
 	}
 
 ## Copyright
 
-The library was originally written by albernazf (https://github.com/albernazf/cordova-smtp-client) and later modified by Nelson Medina Humberto (https://github.com/nelsonhumberto/cordova-smtp-client/).
+The library was originally written by albernazf ([cordova-smtp-client](https://github.com/albernazf/cordova-smtp-client)) and later modified by Nelson Medina Humberto ([cordova-smtp-client](https://github.com/nelsonhumberto/cordova-smtp-client/)).
 
-On iOS it makes use of the skpsmtpmessage library, which was originally written by Ian Baird. A recent fork can be found here: https://github.com/jetseven/skpsmtpmessage  
+On iOS it makes use of the skpsmtpmessage library, which was originally written by Ian Baird. A recent fork can be found on ([skpsmtpmessage](https://github.com/jetseven/skpsmtpmessage)).
