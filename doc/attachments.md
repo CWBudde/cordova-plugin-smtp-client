@@ -57,7 +57,7 @@ The following code points out that for your string to be recognized as a base 64
 
 ## Filename
 
-After the base64 prefix, you must specify the file name. From reading the code that parses the base 64 data (dataFromBase64):
+After the base64 prefix, you must specify the file name. 
 
 ```
 - (NSString*) getBasenameFromAttachmentPath:(NSString*)path
@@ -77,3 +77,4 @@ After the base64 prefix, you must specify the file name. From reading the code t
 }
 ```
 
+From reading the above code, we recognize that it attempts to find the filename between the `base64:` part and the `//` part. This means that the filename must follow right after the base64 prefix, and it must be delimited using `//`.
