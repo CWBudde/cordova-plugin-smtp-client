@@ -1,6 +1,6 @@
-## On iOS devices
+# What should the format of the Base64 string be?
 
-### What should the format of the Base64 string be?
+## on iOS devices
 
 Look at the following code below for file `APPEmailComposerImpl.m`:
 
@@ -45,4 +45,32 @@ Look at the following code below for file `APPEmailComposerImpl.m`:
 }
 ```
 
-The following code recommends that the base 64 representation of the file to be attached must begin with the prefix `base64:data` where data is your data represented in base64.
+The following code points out that for your string to be recognized as a base 64 data representation of the file to be attached, it must begin with the prefix `base64:`.
+
+## Filename
+
+After the base64 prefix, you must specify the file name. From reading the code that parses the base 64 data (dataFromBase64):
+
+```
+- (NSString*) getBasenameFromAttachmentPath:(NSString*)path
+{
+    if ([path hasPrefix:@"base64:"])
+    {
+        NSString* pathWithoutPrefix;
+
+        pathWithoutPrefix = [path stringByReplacingOccurrencesOfString:@"base64:"
+                                                            withString:@""];
+
+        return [pathWithoutPrefix substringToIndex:
+                [pathWithoutPrefix rangeOfString:@"//"].location];
+    }
+
+    return path;
+}
+```
+
+Your full base64 string must look like the following:
+
+```
+base64:filename.ext//yourbase64datahere
+```
