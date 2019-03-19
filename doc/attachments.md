@@ -2,6 +2,15 @@
 
 ## on iOS devices
 
+
+Your full base64 string must look like the following:
+
+```
+base64:filename.ext//yourbase64datahere
+```
+
+## Why exactly?
+
 Look at the following code below for file `APPEmailComposerImpl.m`:
 
 ```ObjectiveC
@@ -69,8 +78,3 @@ After the base64 prefix, you must specify the file name. From reading the code t
 }
 ```
 
-Your full base64 string must look like the following:
-
-```
-base64:filename.ext//yourbase64datahere
-```
