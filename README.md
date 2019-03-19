@@ -36,7 +36,7 @@ On your javascript call use a code similar to this.
 				
 	smtpClient.sendMail(mailSettings, success, failure);
 
-The attachments is an array of strings where when using IOS the files needs to be in DATA_URI format and when Android should be the path of the file.
+The attachments is an array of strings where when using IOS the files needs to be in [DATA_URI format](doc/attachments.md) and when Android should be the path of the file.
 	
 The return object "message" has the following structure
 
