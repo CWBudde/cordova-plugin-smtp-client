@@ -1,7 +1,6 @@
-# What should the format of the Base64 string be?
+# What does the Data URI format using Base64 string look like?
 
-## on iOS devices
-
+## On iOS devices
 
 Your full base64 string must look like the following:
 
