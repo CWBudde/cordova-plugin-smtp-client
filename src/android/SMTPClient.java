@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.StrictMode;
-import android.widget.Toast;
+//import android.widget.Toast;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -32,7 +32,7 @@ public class SMTPClient extends CordovaPlugin {
                     // This is where you do your work in the UI thread.
                     // Your worker tells you in the message what to do.
 
-                    if (message.what == 0) {
+                    /*if (message.what == 0) {
                         Toast.makeText(cordova.getActivity(),
                                 "Email was sent successfully.",
                                 Toast.LENGTH_LONG).show();
@@ -45,7 +45,7 @@ public class SMTPClient extends CordovaPlugin {
                         Toast.makeText(cordova.getActivity(),
                                 "There was a problem sending the email. " + message.obj,
                                 Toast.LENGTH_LONG).show();
-                    }
+                    }*/
                 }
             };
             this.cordova.getThreadPool().execute (new Runnable() {
