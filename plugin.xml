@@ -31,7 +31,10 @@
       <feature name="SMTPClient">
         <param name="android-package" value="com.cordova.smtp.client.SMTPClient"/>
       </feature>
-			<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    </config-file>
+	  
+    <config-file target="AndroidManifest.xml" parent="/*">
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     </config-file>
         
     <source-file src="src/android/SMTPClient.java" target-dir="src/com/cordova/smtp/client/"/>
