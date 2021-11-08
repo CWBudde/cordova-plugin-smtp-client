@@ -2,7 +2,7 @@
 
 var smtpClient = {
     sendMail: function (mailSettings, successCB, errorCB) {
-        cordova.exec(successCB, function (err) { errorCB(err); }, "SMTPClient", "cordovaSendMail", [mailSettings]);
+        cordova.exec(successCB, function (err) { errorCB(err); }, "SMTPClient", "cordovaSendMail", [JSON.stringify(mailSettings)]);
     }
 };
 

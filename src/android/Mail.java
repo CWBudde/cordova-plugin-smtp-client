@@ -3,215 +3,201 @@ package com.cordova.smtp.client;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.activation.CommandMap;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.activation.MailcapCommandMap;
-import javax.mail.BodyPart;
-import javax.mail.Multipart;
+import javax.mail.Authenticator;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 
-public class Mail extends javax.mail.Authenticator {
-    private String _user;
-    private String _pass;
+public class Mail {
 
-    private String[] _to;
-    private String[] _cc;
-    private String _from;
+    // Object properties
+    private String fromEmail;
+    private String[] toEmails;
 
-    private String _port;
-    private String _sport;
+    private String host;
+    private String port;
+    
+    private boolean auth;
+    private String user;
+    private String password;
 
-    private String _host;
+    private int encryption; // O: None, 1: SSL, 2: TLS
 
-    private String _subject;
-    private String _body;
-
-    private boolean _auth;
-    private boolean _ssl;
-
-    private boolean _debuggable;
-
-    private Multipart _multipart;
-
-    public Mail() {
-        _host = ""; // default smtp server
-        _port = "587"; // default smtp port
-        _sport = "587"; // default socketfactory port
-
-        _user = ""; // username
-        _pass = ""; // password
-        _from = ""; // email sent from
-        _subject = ""; // email subject
-        _body = ""; // email body
-        _ssl = false;
-
-        _debuggable = false; // debug mode on or off - default off
-        _auth = true; // smtp authentication - default on
-
-        _multipart = new MimeMultipart();
-
-        // There is something wrong with MailCap, javamail can not find a handler for the multipart/mixed part, so this bit needs to be added.
-        MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
-        mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
-        mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
-        mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
-        mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
-        mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
-        CommandMap.setDefaultCommandMap(mc);
+    private String subject;
+    private String body;
+    
+    // Getters and setters
+    public String getFromEmail() {
+        return this.fromEmail;
     }
 
-    public Mail(String user, String pass) {
+    public void setFromEmail(String fromEmail) {
+        this.fromEmail = fromEmail;
+    }
+
+    public String[] getToEmails() {
+        return this.toEmails;
+    }
+
+    public void setToEmails(String[] toEmails) {
+        this.toEmails = toEmails;
+    }
+
+    public String getHost() {
+        return this.host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return Integer.parseInt(this.port);
+    }
+
+    public void setPort(int port) {
+        this.port = Integer.toString(port);
+    }
+
+    public boolean isAuth() {
+        return this.auth;
+    }
+
+    public boolean getAuth() {
+        return this.auth;
+    }
+
+    public void setAuth(boolean auth) {
+        this.auth = auth;
+    }
+
+    public String getUser() {
+        return this.user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getEncryption() {
+        return this.encryption;
+    }
+
+    public void setEncryption(int encryption) {
+        this.encryption = encryption;
+    }
+
+    public String getSubject() {
+        return this.subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getBody() {
+        return this.body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    // Constructors
+    public Mail() {
+        this.fromEmail = "";
+
+        this.host = "";
+        this.port = "25";
+        
+        this.auth = false;
+        this.user = "";
+        this.password = "";
+
+        // O: None, 1: SSL, 2: TLS
+        this.encryption = 0;
+    }
+
+    public Mail(String user, String password) {
         this();
 
-        _user = user;
-        _pass = pass;
+        this.user = user;
+        this.password = password;
     }
 
-    public boolean send() throws Exception {
-        Properties props = _setProperties();
+    // Methods
+    public void send() throws Exception {
+        MimeMessage msg = new MimeMessage(this.getSession());
+        
+        // Set message headers
+        msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
+        msg.addHeader("format", "flowed");
+        msg.addHeader("Content-Transfer-Encoding", "8bit");
 
-        if (!_user.equals("") && !_pass.equals("") && _to.length > 0 && !_from.equals("") && !_subject.equals("") && !_body.equals("")) {
-            Session session = Session.getInstance(props, this);
+        msg.setFrom(new InternetAddress(this.fromEmail));
+        msg.setSubject(this.subject, "UTF-8");
+        msg.setText(this.body, "UTF-8");
+        msg.setSentDate(new Date());
 
-            MimeMessage msg = new MimeMessage(session);
-
-            msg.setFrom(new InternetAddress(_from));
-
-            InternetAddress[] addressTo = new InternetAddress[_to.length];
-            for (int i = 0; i < _to.length; i++) {
-                addressTo[i] = new InternetAddress(_to[i]);
+        if (this.toEmails != null && this.toEmails.length > 0) {
+            InternetAddress[] addressesTo = new InternetAddress[this.toEmails.length];
+            for (int i = 0; i < this.toEmails.length; i++) {
+                addressesTo[i] = new InternetAddress(this.toEmails[i]);
             }
-            msg.setRecipients(MimeMessage.RecipientType.TO, addressTo);
-
-			if((_cc != null)){
-				InternetAddress[] addressCC = new InternetAddress[_cc.length]; 
-				for (int i = 0; i < _cc.length; i++) { 
-					addressCC[i] = new InternetAddress(_cc[i]); 
-				}
-				msg.setRecipients(MimeMessage.RecipientType.CC, addressCC);
-			}
-			
-            msg.setSubject(_subject);
-            msg.setSentDate(new Date());
-
-            // setup message body
-            BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText(_body);
-            _multipart.addBodyPart(messageBodyPart);
-
-            // Put parts in message
-            // msg.setContent(_multipart);
-			msg.setContent(_body,"text/html; charset=utf-8"); 
-
-            // send email
-            Transport.send(msg);
-
-            return true;
-        } else {
-            return false;
+            msg.setRecipients(Message.RecipientType.TO, addressesTo);
         }
+        
+        Transport.send(msg);  
     }
 
-    public void addAttachment(String filename) throws Exception {
-        BodyPart messageBodyPart = new MimeBodyPart();
-        DataSource source = new FileDataSource(filename);
-        messageBodyPart.setDataHandler(new DataHandler(source));
-        messageBodyPart.setFileName(filename);
+    /**
+     * 
+     * 
+     * @return
+     */
+    private Session getSession() throws Exception {
+        // No authentication
+        if (!this.auth) {
+            Properties props = System.getProperties();
+            props.put("mail.smtp.host", this.host);
+            return Session.getInstance(props, null);
+        } 
 
-        _multipart.addBodyPart(messageBodyPart);
-    }
-
-    public String[] get_to() {
-        return _to;
-    }
-
-    public void set_to(String[] _to) {
-        this._to = _to;
-    }
-
-	public String[] get_cc() {
-		return _cc;
-	}
-
-	public void set_cc(String[] _cc) {
-		this._cc = _cc;
-	}
-
-    public void set_ssl(boolean _ssl) {
-        this._ssl = _ssl;
-    }
-
-    public String get_from() {
-        return _from;
-    }
-
-    public void set_from(String _from) {
-        this._from = _from;
-    }
-
-    public void set_auth(boolean _auth) {
-        this._auth = _auth;
-    }
-
-    public void set_port(int _port) {
-        this._port = Integer.toString(_port);
-    }
-
-    public void set_sport(int _sport) {
-        this._sport = Integer.toString(_sport);
-    }
-
-    public void set_host(String _host) {
-        this._host = _host;
-    }
-
-    public String get_body() {
-        return _body;
-    }
-
-    public void set_body(String _body) {
-        this._body = _body;
-    }
-
-    @Override
-    public PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(_user, _pass);
-    }
-
-    private Properties _setProperties() {
+        // Authentication
         Properties props = new Properties();
-
-        props.put("mail.smtp.host", _host);
-        props.put("mail.smtp.port", _port);
-        if(_auth){
-            props.put("mail.smtp.auth", "true");
-            if(_ssl){
-                props.put("mail.smtp.socketFactory.port", _sport);
-                props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.host", this.host); // SMTP Host
+        props.put("mail.smtp.port", this.port); // SMTP Port
+        props.put("mail.smtp.auth", "true"); // Enabling SMTP Authentication
+        final String usr = this.user;
+        final String psw = this.password;
+        Authenticator auth = new Authenticator() {
+            // Override the getPasswordAuthentication method
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(usr, psw);
             }
-            else {
-                props.put("mail.smtp.starttls.enable", "true");
-            }
+        };
+        if (this.encryption == 2) {
+            // TLS Authentication
+            props.put("mail.smtp.starttls.enable", "true"); // Enable StartTLS
+            return Session.getInstance(props, auth);
+        } else if (encryption == 1) {
+            // SSL Authentication            
+            props.put("mail.smtp.socketFactory.port", this.port); // SSL Port
+            props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // SSL factory class
+            return Session.getDefaultInstance(props, auth);
         }
 
-        return props;
+        throw new Exception("Session could not be obtained");
     }
-
-    public String get_subject() {
-        return _subject;
-    }
-
-    public void set_subject(String _subject) {
-        this._subject = _subject;
-    }
-
-    // more of the getters and setters
 }

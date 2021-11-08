@@ -4,7 +4,6 @@ import android.util.Log;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SMTPClient extends CordovaPlugin {
@@ -20,7 +19,7 @@ public class SMTPClient extends CordovaPlugin {
     }
 
     @Override
-    public boolean execute(String action, final JSONArray rawArgs, final CallbackContext callback) {
+    public boolean execute(String action, String rawArgs, CallbackContext callback) {
         this.callback = callback;
         this.action = action;
         this.rawArgs = rawArgs;
@@ -61,49 +60,40 @@ public class SMTPClient extends CordovaPlugin {
         });
     }
 
+    /**
+     * Helper function to log to Logcat and log back to plugin result.
+     */
+    private void logError(final CallbackContext callbackContext, final String msg, final Exception e) {
+        Log.e(TAG, msg, e);
+        callbackContext.error(msg + ": " + e.getMessage());
+    }
+
 
     /**
      * 
      * 
      * @param args
      * @param callback
-     * @throws JSONException
      */
-    private void sendEmail(JSONArray args, CallbackContext callback) throws JSONException {
-        callback.success("Message sent");
+    private void sendEmail(JSONArray args, CallbackContext callback) {
+        try {
+            Mail mail = new Mail("marvin.smtp@gmail.com", "Peraza_12");
+            mail.setFromEmail("marvin.smtp@gmail.com");
+            String[] toEmails = {"marvin@raven.com", "marvingerardoperaza@gmail.com"};
+            mail.setToEmails(toEmails);
+            mail.setHost("smtp.gmail.com");
+            mail.setPort(465);
+            mail.setAuth(true);
+            mail.setEncryption(1);
+            mail.setSubject("SMTP Client test: SSL");
+            mail.setBody("This email was sent from my scanner");
+            
+            mail.send();
+
+            callback.success("Message sent");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            callback.error("An error occurred while trying to send the email");
+        }
     }
-
-
-
-    // /**
-    //  * 
-    //  * 
-    //  * @param json
-    //  * @throws Exception
-    //  */
-    // private void sendEmailViaGmail(JSONObject json) throws Exception {
-    //     Mail m = new Mail(json.getString("smtpUserName"), json.getString("smtpPassword"));
-    //     String[] toArr = json.getString("emailTo").split(",");
-    //     String emailCC = json.optString("emailCC");
-    //     String[] ccArr = (emailCC.isEmpty()) ? null : emailCC.split(",");
-    //     m.set_to(toArr);
-    //     m.set_cc(ccArr);
-    //     m.set_host(json.getString("smtp"));
-    //     m.set_from(json.getString("emailFrom"));
-    //     m.set_body(json.getString("textBody"));
-    //     m.set_subject(json.getString("subject"));
-
-    //     JSONArray attachments = json.getJSONArray("attachments");
-    //     if(attachments != null){
-    //         for(int i=0; i < attachments.length(); i++){
-    //             String fileFullName = attachments.getString(i);
-    //             if(fileFullName.contains(":")){
-    //                 fileFullName = fileFullName.split(":")[1];
-    //             }
-    //             m.addAttachment(fileFullName);
-    //         }
-    //     }
-    //     boolean sendFlag = m.send();
-    // }
-
 }
