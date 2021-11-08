@@ -77,19 +77,33 @@ public class SMTPClient extends CordovaPlugin {
      */
     private void sendEmail(JSONArray args, CallbackContext callback) {
         try {
-            Mail mail = new Mail("marvin.smtp@gmail.com", "Peraza_12");
-            mail.setFromEmail("marvin.smtp@gmail.com");
-            String[] toEmails = {"marvin@raven.com", "marvingerardoperaza@gmail.com"};
+            JSONObject smtpSettings = new JSONObject(args.getString(0));
+            String user = smtpSettings.getString("user");
+            String password = smtpSettings.getString("password");
+            String fromEmail = smtpSettings.getString("fromEmail");
+            JSONArray toEmailsJSONArray = smtpSettings.getJSONArray("toEmails");
+            String[] toEmails = new String[toEmailsJSONArray.length()];
+            for (int i = 0; i < toEmailsJSONArray.length(); i++) {
+                toEmails[i] = toEmailsJSONArray.getString(i);
+            }
+            String host = smtpSettings.getString("host");
+            int port = smtpSettings.getInt("port");
+            boolean auth = smtpSettings.getBoolean("auth");
+            int encryption = smtpSettings.getInt("encryption");
+            String subject = smtpSettings.getString("subject");
+            String body = smtpSettings.getString("body");
+
+            Mail mail = new Mail(user, password);
+            mail.setFromEmail(fromEmail);
             mail.setToEmails(toEmails);
-            mail.setHost("smtp.gmail.com");
-            mail.setPort(465);
-            mail.setAuth(true);
-            mail.setEncryption(1);
-            mail.setSubject("SMTP Client test: SSL");
-            mail.setBody("This email was sent from my scanner");
+            mail.setHost(host);
+            mail.setPort(port);
+            mail.setAuth(auth);
+            mail.setEncryption(encryption);
+            mail.setSubject(subject);
+            mail.setBody(body);
             
             mail.send();
-
             callback.success("Message sent");
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
