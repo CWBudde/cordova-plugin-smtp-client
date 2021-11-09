@@ -1,14 +1,18 @@
 package com.cordova.smtp.client;
 
 import android.util.Log;
+import javax.mail.AuthenticationFailedException;
+import javax.mail.MessagingException;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SMTPClient extends CordovaPlugin {
     public final String ACTION_SEND_EMAIL = "cordovaSendMail";
-
+    public final String ACTION_TEST_CONNECTION = "cordovaTestConnection";
+    
     private static final String TAG = "SMTPClient";
     private CallbackContext callback;
     private String action;
@@ -34,7 +38,17 @@ public class SMTPClient extends CordovaPlugin {
             threadHelper(new SMTPFunction() {
                 @Override
                 public void run(JSONArray args, CallbackContext callback) throws Exception {
-                    sendEmail(args, callback);
+                    sendMail(args, callback);
+                }
+            }, rawArgs, callback);
+            return true;
+        }
+
+        if (ACTION_TEST_CONNECTION.equals(action)) {
+            threadHelper(new SMTPFunction() {
+                @Override
+                public void run(JSONArray args, CallbackContext callback) throws Exception {
+                    testConnection(args, callback);
                 }
             }, rawArgs, callback);
             return true;
@@ -75,39 +89,79 @@ public class SMTPClient extends CordovaPlugin {
      * @param args
      * @param callback
      */
-    private void sendEmail(JSONArray args, CallbackContext callback) {
+    private void sendMail(JSONArray args, CallbackContext callback) {
         try {
             JSONObject smtpSettings = new JSONObject(args.getString(0));
-            String user = smtpSettings.getString("user");
-            String password = smtpSettings.getString("password");
+            Mail mail = this.getMailObject(smtpSettings, false);
+            mail.send();
+            callback.success("Email sent");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            callback.error("An error occurred while trying to send the email");
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @param args
+     * @param callback
+     */
+    private void testConnection(JSONArray args, CallbackContext callback) {
+        try {
+            JSONObject smtpSettings = new JSONObject(args.getString(0));
+            Mail mail = this.getMailObject(smtpSettings, true);
+            mail.testConnection();
+            callback.success("Successful connection");
+        } catch (AuthenticationFailedException e) {
+            Log.e(TAG, e.getMessage(), e);
+            callback.error("AuthenticationFailedException");
+        } catch (MessagingException e) {
+            Log.e(TAG, e.getMessage(), e);
+            callback.error("MessagingException");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            callback.error("An error occurred while trying to test the connection");
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @param smtpSettings
+     * @param testingConnection
+     * @return
+     */
+    private Mail getMailObject(JSONObject smtpSettings, boolean testingConnection) throws JSONException {
+        String user = smtpSettings.getString("user");
+        String password = smtpSettings.getString("password");
+        String host = smtpSettings.getString("host");
+        int port = smtpSettings.getInt("port");
+        boolean auth = smtpSettings.getBoolean("auth");
+        int encryption = smtpSettings.getInt("encryption");
+
+        Mail mail = new Mail(user, password);
+        mail.setHost(host);
+        mail.setPort(port);
+        mail.setAuth(auth);
+        mail.setEncryption(encryption);
+        
+        if (!testingConnection) {
             String fromEmail = smtpSettings.getString("fromEmail");
             JSONArray toEmailsJSONArray = smtpSettings.getJSONArray("toEmails");
             String[] toEmails = new String[toEmailsJSONArray.length()];
             for (int i = 0; i < toEmailsJSONArray.length(); i++) {
                 toEmails[i] = toEmailsJSONArray.getString(i);
             }
-            String host = smtpSettings.getString("host");
-            int port = smtpSettings.getInt("port");
-            boolean auth = smtpSettings.getBoolean("auth");
-            int encryption = smtpSettings.getInt("encryption");
             String subject = smtpSettings.getString("subject");
             String body = smtpSettings.getString("body");
 
-            Mail mail = new Mail(user, password);
             mail.setFromEmail(fromEmail);
             mail.setToEmails(toEmails);
-            mail.setHost(host);
-            mail.setPort(port);
-            mail.setAuth(auth);
-            mail.setEncryption(encryption);
             mail.setSubject(subject);
             mail.setBody(body);
-            
-            mail.send();
-            callback.success("Message sent");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-            callback.error("An error occurred while trying to send the email");
         }
+
+        return mail;
     }
 }

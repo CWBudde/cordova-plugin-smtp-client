@@ -1,35 +1,35 @@
 package com.cordova.smtp.client;
 
-import java.util.Date;
-import java.util.Properties;
-
 import javax.mail.Authenticator;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import java.security.NoSuchProviderException;
+import java.util.Date;
+import java.util.Properties;
 
 public class Mail {
 
     // Object properties
+
     private String fromEmail;
     private String[] toEmails;
-
     private String host;
     private String port;
-    
     private boolean auth;
     private String user;
     private String password;
-
     private int encryption; // O: None, 1: SSL, 2: TLS
-
     private String subject;
     private String body;
     
     // Getters and setters
+
     public String getFromEmail() {
         return this.fromEmail;
     }
@@ -115,29 +115,29 @@ public class Mail {
     }
 
     // Constructors
+
     public Mail() {
         this.fromEmail = "";
-
         this.host = "";
         this.port = "25";
-        
         this.auth = false;
         this.user = "";
         this.password = "";
-
-        // O: None, 1: SSL, 2: TLS
-        this.encryption = 0;
+        this.encryption = 0; // O: None, 1: SSL, 2: TLS
     }
 
     public Mail(String user, String password) {
         this();
-
         this.user = user;
         this.password = password;
     }
 
     // Methods
-    public void send() throws Exception {
+
+    /**
+     * 
+     */
+    public void send() throws MessagingException, AddressException {
         MimeMessage msg = new MimeMessage(this.getSession());
         
         // Set message headers
@@ -163,41 +163,50 @@ public class Mail {
 
     /**
      * 
+     */
+    public void testConnection() throws MessagingException, NoSuchProviderException  {
+        Session session = this.getSession();
+        Transport transport = session.getTransport("smtp");
+        if (this.auth) {
+            transport.connect(this.host, this.getPort(), this.user, this.password);
+        } else {
+            transport.connect(this.host, this.getPort(), null, null);
+        }
+        transport.close();
+    }
+
+    /**
+     * 
      * 
      * @return
      */
-    private Session getSession() throws Exception {
-        // No authentication
-        if (!this.auth) {
-            Properties props = System.getProperties();
-            props.put("mail.smtp.host", this.host);
-            return Session.getInstance(props, null);
-        } 
-
-        // Authentication
+    private Session getSession() {
         Properties props = new Properties();
-        props.put("mail.smtp.host", this.host); // SMTP Host
-        props.put("mail.smtp.port", this.port); // SMTP Port
-        props.put("mail.smtp.auth", "true"); // Enabling SMTP Authentication
-        final String usr = this.user;
-        final String psw = this.password;
-        Authenticator auth = new Authenticator() {
-            // Override the getPasswordAuthentication method
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(usr, psw);
-            }
-        };
-        if (this.encryption == 2) {
-            // TLS Authentication
-            props.put("mail.smtp.starttls.enable", "true"); // Enable StartTLS
-            return Session.getInstance(props, auth);
-        } else if (encryption == 1) {
+        props.put("mail.smtp.host", this.host);
+        props.put("mail.smtp.port", this.port);
+
+        if (this.encryption == 1) {
             // SSL Authentication            
             props.put("mail.smtp.socketFactory.port", this.port); // SSL Port
             props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory"); // SSL factory class
-            return Session.getDefaultInstance(props, auth);
+        } else if (this.encryption == 2) {
+            // TLS Authentication
+            props.put("mail.smtp.starttls.enable", "true"); // Enable StartTLS
         }
 
-        throw new Exception("Session could not be obtained");
+        if (this.auth) {
+            props.put("mail.smtp.auth", "true"); // Enabling SMTP Authentication
+            final String usr = this.user;
+            final String psw = this.password;
+            Authenticator auth = new Authenticator() {
+                // Override the getPasswordAuthentication method
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(usr, psw);
+                }
+            };
+            return Session.getInstance(props, auth);
+        } else {
+            return Session.getInstance(props, null);
+        }
     }
 }
