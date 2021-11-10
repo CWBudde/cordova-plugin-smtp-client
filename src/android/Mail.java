@@ -134,22 +134,16 @@ public class Mail {
 
     // Methods
 
-    /**
-     * 
-     */
     public void send() throws MessagingException, AddressException {
         MimeMessage msg = new MimeMessage(this.getSession());
-        
         // Set message headers
         msg.addHeader("Content-type", "text/HTML; charset=UTF-8");
         msg.addHeader("format", "flowed");
         msg.addHeader("Content-Transfer-Encoding", "8bit");
-
         msg.setFrom(new InternetAddress(this.fromEmail));
         msg.setSubject(this.subject, "UTF-8");
         msg.setText(this.body, "UTF-8");
         msg.setSentDate(new Date());
-
         if (this.toEmails != null && this.toEmails.length > 0) {
             InternetAddress[] addressesTo = new InternetAddress[this.toEmails.length];
             for (int i = 0; i < this.toEmails.length; i++) {
@@ -157,13 +151,9 @@ public class Mail {
             }
             msg.setRecipients(Message.RecipientType.TO, addressesTo);
         }
-        
         Transport.send(msg);  
     }
 
-    /**
-     * 
-     */
     public void testConnection() throws MessagingException, NoSuchProviderException  {
         Session session = this.getSession();
         Transport transport = session.getTransport("smtp");
@@ -175,16 +165,10 @@ public class Mail {
         transport.close();
     }
 
-    /**
-     * 
-     * 
-     * @return
-     */
     private Session getSession() {
         Properties props = new Properties();
         props.put("mail.smtp.host", this.host);
         props.put("mail.smtp.port", this.port);
-
         if (this.encryption == 1) {
             // SSL Authentication            
             props.put("mail.smtp.socketFactory.port", this.port); // SSL Port
@@ -193,7 +177,6 @@ public class Mail {
             // TLS Authentication
             props.put("mail.smtp.starttls.enable", "true"); // Enable StartTLS
         }
-
         if (this.auth) {
             props.put("mail.smtp.auth", "true"); // Enabling SMTP Authentication
             final String usr = this.user;

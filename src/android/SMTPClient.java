@@ -32,7 +32,7 @@ public class SMTPClient extends CordovaPlugin {
     }
 
     private boolean executeInternal(String action, String rawArgs, CallbackContext callback) {
-        Log.i(TAG, "Running executeInternal(), action: " + action + ", rawArgs: " + rawArgs);
+        Log.i(TAG, "Running executeInternal(), action: " + action);
 
         if (ACTION_SEND_EMAIL.equals(action)) {
             threadHelper(new SMTPFunction() {
@@ -84,10 +84,7 @@ public class SMTPClient extends CordovaPlugin {
 
 
     /**
-     * 
-     * 
-     * @param args
-     * @param callback
+     * Sends the email based on the arguments passed as a parameter.
      */
     private void sendMail(JSONArray args, CallbackContext callback) {
         try {
@@ -102,10 +99,7 @@ public class SMTPClient extends CordovaPlugin {
     }
 
     /**
-     * 
-     * 
-     * @param args
-     * @param callback
+     * Allows to test an SMTP connection.
      */
     private void testConnection(JSONArray args, CallbackContext callback) {
         try {
@@ -126,11 +120,7 @@ public class SMTPClient extends CordovaPlugin {
     }
 
     /**
-     * 
-     * 
-     * @param smtpSettings
-     * @param testingConnection
-     * @return
+     * Creates an object of type Mail and assigns its attributes based on the smtpSettings's values.
      */
     private Mail getMailObject(JSONObject smtpSettings, boolean testingConnection) throws JSONException {
         String user = smtpSettings.getString("user");
