@@ -1,67 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-smtp-client"
-        version="2.0.11">
-    
-  <name>SMTP-Client</name>
-	
-  <description>
-    Basic SMTP client for editing and sending email messages
-  </description>	
-  <license>Apache 2.0</license>
-	<keywords>cordova,smtp,email</keywords>
-  
-	<repo>https://github.com/CWBudde/cordova-plugin-smtp-client.git</repo>
-  <engines>
-    <engine name="cordova" version=">=6.0.0" />
-    <engine name="cordova-android" version=">=6.2.0" />
-    <engine name="cordova-ios" version=">=4.0.0" />
-  </engines>
-    
-	<asset src="www/smtpClient.js" target="js/smtpClient.js"/>
-
-	<!-- interface -->    
-  <js-module src="www/smtpClient.js" name="smtpClient">
-    <clobbers target="smtpClient" />
-  </js-module>
-    
-  <platform name="android">
-    <config-file target="res/xml/config.xml" parent="/*">
-      <feature name="SMTPClient">
-        <param name="android-package" value="com.cordova.smtp.client.SMTPClient"/>
-      </feature>
-    </config-file>
-	  
-    <config-file target="AndroidManifest.xml" parent="/*">
-        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    </config-file>
-        
-    <source-file src="src/android/SMTPClient.java" target-dir="src/com/cordova/smtp/client/"/>
-		<source-file src="src/android/Mail.java" target-dir="src/com/cordova/smtp/client/"/>
-		<source-file src="src/android/activation.jar" target-dir="libs"/>
-		<source-file src="src/android/additionnal.jar" target-dir="libs"/>
-		<source-file src="src/android/mail.jar" target-dir="libs"/>
-  </platform>
-    
-  <platform name="ios">
-    <config-file target="config.xml" parent="/widget">
-      <feature name="SMTPClient">
-        <param name="ios-package" value="SMTPClient" />
-      </feature>
-    </config-file>
-        
-    <header-file src="src/ios/SMTPClient.h"/>
-    <source-file src="src/ios/SMTPClient.m"/>
-    <header-file src="src/ios/SMTPLibrary/Base64Transcoder.h"/>
-    <source-file src="src/ios/SMTPLibrary/Base64Transcoder.m"/>
-    <header-file src="src/ios/SMTPLibrary/HSK_CFUtilities.h"/>
-    <source-file src="src/ios/SMTPLibrary/HSK_CFUtilities.m"/>
-    <header-file src="src/ios/SMTPLibrary/NSData+Base64Additions.h"/>
-    <source-file src="src/ios/SMTPLibrary/NSData+Base64Additions.m"/>
-    <header-file src="src/ios/SMTPLibrary/NSStream+SKPSMTPExtensions.h"/>
-    <source-file src="src/ios/SMTPLibrary/NSStream+SKPSMTPExtensions.m"/>
-    <header-file src="src/ios/SMTPLibrary/SKPSMTPMessage.h"/>
-    <source-file src="src/ios/SMTPLibrary/SKPSMTPMessage.m"/>
-  </platform>
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-smtp-client" version="2.0.11">
+   <name>SMTP-Client</name>
+   <description>Basic SMTP client for editing and sending email messages</description>
+   <license>Apache 2.0</license>
+   <keywords>cordova,smtp,email</keywords>
+   <repo>https://github.com/CWBudde/cordova-plugin-smtp-client.git</repo>
+   <engines>
+      <engine name="cordova" version=">=6.0.0" />
+      <engine name="cordova-android" version=">=6.2.0" />
+      <engine name="cordova-ios" version=">=4.0.0" />
+   </engines>
+   <asset src="www/smtpClient.js" target="js/smtpClient.js" />
+   <!-- interface -->
+   <js-module src="www/smtpClient.js" name="smtpClient">
+      <clobbers target="smtpClient" />
+   </js-module>
+   <platform name="android">
+      <config-file target="res/xml/config.xml" parent="/*">
+         <feature name="SMTPClient">
+            <param name="android-package" value="com.cordova.smtp.client.SMTPClient" />
+         </feature>
+      </config-file>
+      <config-file target="AndroidManifest.xml" parent="/*">
+         <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+      </config-file>
+      <source-file src="src/android/SMTPClient.java" target-dir="src/com/cordova/smtp/client/" />
+      <source-file src="src/android/Mail.java" target-dir="src/com/cordova/smtp/client/" />
+      <source-file src="src/android/Attachment.java" target-dir="src/com/cordova/smtp/client/" />
+      <source-file src="src/android/activation.jar" target-dir="libs" />
+      <source-file src="src/android/additionnal.jar" target-dir="libs" />
+      <source-file src="src/android/mail.jar" target-dir="libs" />
+   </platform>
+   <platform name="ios">
+      <config-file target="config.xml" parent="/widget">
+         <feature name="SMTPClient">
+            <param name="ios-package" value="SMTPClient" />
+         </feature>
+      </config-file>
+      <header-file src="src/ios/SMTPClient.h" />
+      <source-file src="src/ios/SMTPClient.m" />
+      <header-file src="src/ios/SMTPLibrary/Base64Transcoder.h" />
+      <source-file src="src/ios/SMTPLibrary/Base64Transcoder.m" />
+      <header-file src="src/ios/SMTPLibrary/HSK_CFUtilities.h" />
+      <source-file src="src/ios/SMTPLibrary/HSK_CFUtilities.m" />
+      <header-file src="src/ios/SMTPLibrary/NSData+Base64Additions.h" />
+      <source-file src="src/ios/SMTPLibrary/NSData+Base64Additions.m" />
+      <header-file src="src/ios/SMTPLibrary/NSStream+SKPSMTPExtensions.h" />
+      <source-file src="src/ios/SMTPLibrary/NSStream+SKPSMTPExtensions.m" />
+      <header-file src="src/ios/SMTPLibrary/SKPSMTPMessage.h" />
+      <source-file src="src/ios/SMTPLibrary/SKPSMTPMessage.m" />
+   </platform>
 </plugin>

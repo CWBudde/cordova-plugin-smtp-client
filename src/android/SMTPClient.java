@@ -145,11 +145,18 @@ public class SMTPClient extends CordovaPlugin {
             }
             String subject = smtpSettings.getString("subject");
             String body = smtpSettings.getString("body");
-
+            JSONArray attachmentsJSONArray = smtpSettings.getJSONArray("attachments");
+            Attachment[] attachments = new Attachment[attachmentsJSONArray.length()];
+            for (int i = 0; i < attachmentsJSONArray.length(); i++) {
+                JSONObject attachmentJSONObject = attachmentsJSONArray.getJSONObject(i);
+                Attachment attachment = new Attachment(attachmentJSONObject.getString("path"), attachmentJSONObject.getString("name"));
+                attachments[i] = attachment;
+            }
             mail.setFromEmail(fromEmail);
             mail.setToEmails(toEmails);
             mail.setSubject(subject);
             mail.setBody(body);
+            mail.setAttachments(attachments);
         }
 
         return mail;

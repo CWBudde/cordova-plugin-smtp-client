@@ -1,11 +1,18 @@
 package com.cordova.smtp.client;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Authenticator;
+import javax.mail.BodyPart;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -15,7 +22,7 @@ import java.util.Properties;
 
 public class Mail {
 
-    // Object properties
+    // Object attributes
 
     private String fromEmail;
     private String[] toEmails;
@@ -27,6 +34,25 @@ public class Mail {
     private int encryption; // O: None, 1: SSL, 2: TLS
     private String subject;
     private String body;
+    private Attachment[] attachments;
+
+    // Constructors
+
+    public Mail() {
+        this.fromEmail = "";
+        this.host = "";
+        this.port = "25";
+        this.auth = false;
+        this.user = "";
+        this.password = "";
+        this.encryption = 0; // O: None, 1: SSL, 2: TLS
+    }
+
+    public Mail(String user, String password) {
+        this();
+        this.user = user;
+        this.password = password;
+    }
     
     // Getters and setters
 
@@ -114,22 +140,12 @@ public class Mail {
         this.body = body;
     }
 
-    // Constructors
-
-    public Mail() {
-        this.fromEmail = "";
-        this.host = "";
-        this.port = "25";
-        this.auth = false;
-        this.user = "";
-        this.password = "";
-        this.encryption = 0; // O: None, 1: SSL, 2: TLS
+    public Attachment[] getAttachments() {
+        return this.attachments;
     }
 
-    public Mail(String user, String password) {
-        this();
-        this.user = user;
-        this.password = password;
+    public void setAttachments(Attachment[] attachments) {
+        this.attachments = attachments;
     }
 
     // Methods
@@ -142,7 +158,22 @@ public class Mail {
         msg.addHeader("Content-Transfer-Encoding", "8bit");
         msg.setFrom(new InternetAddress(this.fromEmail));
         msg.setSubject(this.subject, "UTF-8");
-        msg.setText(this.body, "UTF-8");
+        // Set body and attachments
+        BodyPart messageBodyPart = new MimeBodyPart();
+        messageBodyPart.setText(this.body);
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(messageBodyPart);
+        if (this.attachments != null && this.attachments.length > 0) {
+            for (int i = 0; i < this.attachments.length; i++) {
+                messageBodyPart = new MimeBodyPart();
+                String filePath = this.attachments[i].getPath();
+                DataSource source = new FileDataSource(filePath);
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName(this.attachments[i].getName());
+                multipart.addBodyPart(messageBodyPart);
+            }
+        }
+        msg.setContent(multipart);
         msg.setSentDate(new Date());
         if (this.toEmails != null && this.toEmails.length > 0) {
             InternetAddress[] addressesTo = new InternetAddress[this.toEmails.length];
