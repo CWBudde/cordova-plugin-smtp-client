@@ -93,8 +93,16 @@ public class SMTPClient extends CordovaPlugin {
             mail.send();
             callback.success("Email sent");
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-            callback.error("An error occurred while trying to send the email");
+            String errorMsg = e.getMessage();
+            if (errorMsg == null) {
+                errorMsg = "An error occurred while trying to send the email";
+            }
+            Throwable cause = e.getCause();
+            if (cause != null && cause.getMessage() != null) {
+                errorMsg = errorMsg + ": " + e.getCause().getMessage();
+            }
+            Log.e(TAG, errorMsg, e);
+            callback.error(errorMsg);
         }
     }
 
